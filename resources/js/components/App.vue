@@ -14,7 +14,7 @@
           <div class="offcanvas-body">
             <div class="card">
               <div class="card-header">
-                Jhonny
+                Jhonny Bravo
               </div>
               <div class="card-body">
                 <blockquote class="blockquote mb-0">
@@ -26,9 +26,16 @@
                 </blockquote>
               </div>
             </div>
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 mt-5">
               <li class="nav-item text-center">
-                <a class="btn btn-warning text-white" href="#">Cerrar Sesion</a>
+                <a 
+                  class="btn btn-warning text-white" 
+                  @click.prevent="logout"
+                  href="#"
+                  :disabled="loading"
+                >
+                  Cerrar Sesion
+                </a>
               </li>
             </ul>
           </div>
@@ -38,3 +45,37 @@
     <router-view></router-view>
   </div>
 </template>
+
+<script>
+  export default {
+    name: 'App',
+    data() {
+      return {
+        loading: false,
+        form: {
+          email: '',
+          password: ''
+        }
+      }
+    },
+    methods: {
+      logout() {
+        this.loading = true;
+        axios.get('http://localhost:8000/api/logout')
+          .then(response => {
+            console.log('logout response: ', response);
+            this.$router.push({
+              path: '/login'
+            })
+          })
+          .catch(error => {
+            console.log('error', error);
+          })
+          .finaly(() => {
+            this.loading = false;
+          })
+      }
+    }
+  }
+
+</script>

@@ -35,8 +35,9 @@
             </div>
             <button 
               type="submit" 
-              class="btn btn-primary"
+              class="btn btn-primary mt-3"
               @click.prevent="onSubmit"
+              :disabled="loading"
             >
               Submit
             </button>
@@ -52,6 +53,7 @@
     name: 'Login',
     data() {
       return {
+        loading: false,
         form: {
           email: '',
           password: ''
@@ -60,10 +62,20 @@
     },
     methods: {
       onSubmit() {
-        console.log('this.$refs.form validate: ', this.$refs.form.validate());
-        console.log('this.$refs.form checkValidity: ', this.$refs.form.checkValidity());
-        this.$router.push('/home')
-        console.log('submit', this.form);
+        this.loading = true;
+        axios.post('http://localhost:8000/api/login', this.form)
+          .then(response => {
+            console.log('onSubmit response: ', response);
+            this.$router.push({
+              path: '/correos'
+            })
+          })
+          .catch(error => {
+            console.log('error', error);
+          })
+          .finally(() => {
+            this.loading = false;
+          })
       }
     }
   }
